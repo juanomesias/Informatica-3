@@ -13,7 +13,7 @@ int main() {
         char texto[100];
 
         do {
-            cout << "\n--- MENU PRINCIPAL ---\n";
+            cout << "MENU PRINCIPAL\n";
             cout << "1. RLE\n";
             cout << "2. LZ78\n";
             cout << "3. Rotacion de bits\n";

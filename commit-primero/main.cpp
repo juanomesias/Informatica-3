@@ -7,89 +7,95 @@
 using namespace std;
 
 int main() {
-    int opcion;
-    char texto[100];
+    try {
 
-    do {
-        cout << "\n--- MENU PRINCIPAL ---\n";
-        cout << "1. RLE\n";
-        cout << "2. LZ78\n";
-        cout << "3. Rotacion de bits\n";
-        cout << "4. XOR\n";
-        cout << "0. Salir\n";
-        cout << "Opcion: ";
-        cin >> opcion;
-        cin.ignore();
+        int opcion;
+        char texto[100];
 
-        switch (opcion) {
+        do {
+            cout << "\n--- MENU PRINCIPAL ---\n";
+            cout << "1. RLE\n";
+            cout << "2. LZ78\n";
+            cout << "3. Rotacion de bits\n";
+            cout << "4. XOR\n";
+            cout << "0. Salir\n";
+            cout << "Opcion: ";
+            cin >> opcion;
+            cin.ignore();
 
-        case 1: {
-            char comprimido[100];
-            char descomprimido[100];
+            switch (opcion) {
 
-            cout << "Ingrese texto: ";
-            cin.getline(texto, 100);
+            case 1: {
+                char comprimido[100];
+                char descomprimido[100];
 
-            rleCompress(texto, comprimido);
-            cout << "Texto Comprimido: " << comprimido << endl;
+                cout << "Ingrese texto: ";
+                cin.getline(texto, 100);
 
-            rleDecompress(comprimido, descomprimido);
-            cout << "Texto Descomprimido: " << descomprimido << endl;
+                rleCompress(texto, comprimido);
+                cout << "Texto Comprimido: " << comprimido << endl;
 
-            break;
-        }
-        case 2: {
-            cout << "Ingrese texto: ";
-            cin.getline(texto, 100);
+                rleDecompress(comprimido, descomprimido);
+                cout << "Texto Descomprimido: " << descomprimido << endl;
 
-            int indices[100];
-            char chars[100];
-            int size;
+                break;
+            }
+            case 2: {
+                cout << "Ingrese texto: ";
+                cin.getline(texto, 100);
 
-            compressLZ78(texto, indices, chars, size);
+                int indices[100];
+                char chars[100];
+                int size;
 
-            cout << "Texto Comprimido: ";
-            for (int i = 0; i < size; i++)
-                cout << indices[i] << chars[i] << " ";
+                compressLZ78(texto, indices, chars, size);
 
-            cout << "\nTexto Descomprimido: ";
-            decompressLZ78(indices, chars, size);
-            cout << endl;
-            break;
-        }
+                cout << "Texto Comprimido: ";
+                for (int i = 0; i < size; i++)
+                    cout << indices[i] << chars[i] << " ";
 
-        case 3: {
-            int n;
-            cout << "Ingrese texto: ";
-            cin.getline(texto, 100);
-            cout << "Numero de rotaciones: ";
-            cin >> n;
+                cout << "\nTexto Descomprimido: ";
+                decompressLZ78(indices, chars, size);
+                cout << endl;
+                break;
+            }
 
-            rotateLeftText(texto, n);
-            cout << "Texto Rotado: " << texto << endl;
+            case 3: {
+                int n;
+                cout << "Ingrese texto: ";
+                cin.getline(texto, 100);
+                cout << "Numero de rotaciones: ";
+                cin >> n;
 
-            rotateRightText(texto, n);
-            cout << "Texto Original: " << texto << endl;
-            break;
-        }
+                rotateLeftText(texto, n);
+                cout << "Texto Rotado: " << texto << endl;
 
-        case 4: {
-            char key;
-            cout << "Ingrese texto: ";
-            cin.getline(texto, 100);
-            cout << "Clave: ";
-            cin >> key;
+                rotateRightText(texto, n);
+                cout << "Texto Original: " << texto << endl;
+                break;
+            }
 
-            xorCipher(texto, key);
-            cout << "Texto Encriptado: " << texto << endl;
+            case 4: {
+                char key;
+                cout << "Ingrese texto: ";
+                cin.getline(texto, 100);
+                cout << "Clave: ";
+                cin >> key;
 
-            xorCipher(texto, key);
-            cout << "Texto Desencriptado: " << texto << endl;
-            break;
-        }
-        }
+                xorCipher(texto, key);
+                cout << "Texto Encriptado: " << texto << endl;
 
-    } while (opcion != 0);
+                xorCipher(texto, key);
+                cout << "Texto Desencriptado: " << texto << endl;
+                break;
+            }
+            }
+        } while (opcion != 0);
 
-    return 0;
+        return 0;
+
+    } catch (...) {
+        cout << "Ocurrio un error en el programa" << endl;
+        return 1;
+    }
 }

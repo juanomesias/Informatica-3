@@ -12,4 +12,7 @@ int findEntry(Entry* dict, int size, int prefix, char c);
 void compressLZ78(const char* input, int indices[], char chars[], int &outSize);
 void decompressLZ78(int indices[], char chars[], int size);
 
+//Archivos
+void guardarLZ78(const char* nombre, int indices[], char chars[], int size);
+void leerLZ78(const char* nombre, int indices[], char chars[], int &size);
 #endif

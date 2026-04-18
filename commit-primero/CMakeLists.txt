@@ -14,6 +14,8 @@ add_executable(commit-primero main.cpp
     RLE.h
     Rotacion.h
     XOR.h
+    archivos.h
+    archivos.cpp
 )
 
 include(GNUInstallDirs)

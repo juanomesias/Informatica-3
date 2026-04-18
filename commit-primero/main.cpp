@@ -3,6 +3,7 @@
 #include "xor.h"
 #include "rotacion.h"
 #include "lz78.h"
+#include "archivos.h"
 
 using namespace std;
 
@@ -17,7 +18,8 @@ int main() {
             cout << "1. RLE\n";
             cout << "2. LZ78\n";
             cout << "3. Rotacion de bits\n";
-            cout << "4. XOR\n";
+            cout << "4. Encriptacion (Rotacion + XOR)\n";
+            cout << "5. Integracion completa\n";   // 🔥 AQUÍ VA
             cout << "0. Salir\n";
             cout << "Opcion: ";
             cin >> opcion;
@@ -40,6 +42,7 @@ int main() {
 
                 break;
             }
+
             case 2: {
                 cout << "Ingrese texto: ";
                 cin.getline(texto, 100);
@@ -64,16 +67,20 @@ int main() {
                 int n;
                 cout << "Ingrese texto: ";
                 cin.getline(texto, 100);
+
                 cout << "Numero de rotaciones: ";
                 cin >> n;
+                cin.ignore();
 
                 rotateLeftText(texto, n);
                 cout << "Texto Rotado: " << texto << endl;
 
                 rotateRightText(texto, n);
                 cout << "Texto Original: " << texto << endl;
+
                 break;
             }
+
             case 4: {
                 char key;
                 int n;
@@ -96,7 +103,76 @@ int main() {
 
                 break;
             }
+
+            case 5: {   // 🔥 ESTE ERA EL PROBLEMA PRINCIPAL
+
+                int metodo;
+                char archivoEntrada[50];
+
+                char texto[1000];
+                char comprimido[1000];
+                char descomprimido[1000];
+
+                int indices[1000];
+                char chars[1000];
+                int size;
+
+                int n;
+                char key;
+
+                cout << "Archivo de entrada: ";
+                cin.getline(archivoEntrada, 50);
+
+                cout << "Metodo (1=RLE, 2=LZ78): ";
+                cin >> metodo;
+
+                cout << "Rotaciones: ";
+                cin >> n;
+
+                cout << "Clave: ";
+                cin >> key;
+                cin.ignore();
+
+                // 🔹 Leer archivo
+                leerArchivo(archivoEntrada, texto);
+
+                if (metodo == 1) {
+
+                    // RLE
+                    rleCompress(texto, comprimido);
+
+                    // Encriptar
+                    encrypt(comprimido, n, key);
+
+                    escribirArchivo("encriptado.txt", comprimido);
+
+                    // Desencriptar
+                    decrypt(comprimido, n, key);
+
+                    // Descomprimir
+                    rleDecompress(comprimido, descomprimido);
+
+                    escribirArchivo("resultado.txt", descomprimido);
+
+                } else {
+
+                    // LZ78
+                    compressLZ78(texto, indices, chars, size);
+
+                    guardarLZ78("encriptado.txt", indices, chars, size);
+
+                    leerLZ78("encriptado.txt", indices, chars, size);
+
+                    cout << "Texto reconstruido: ";
+                    decompressLZ78(indices, chars, size);
+                }
+
+                cout << "Proceso completado\n";
+                break;
             }
+
+            }
+
         } while (opcion != 0);
 
         return 0;

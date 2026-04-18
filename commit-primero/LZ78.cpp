@@ -1,7 +1,7 @@
 #include <iostream>
 #include "lz78.h"
-
-using namespace std;
+#include <fstream>
+    using namespace std;
 
 
 int findEntry(Entry* dict, int size, int prefix, char c) {
@@ -83,4 +83,27 @@ void decompressLZ78(int indices[], char chars[], int size) {
         delete[] dict[i];
     }
     delete[] dict;
+}
+
+//Archivos
+void guardarLZ78(const char* nombre, int indices[], char chars[], int size) {
+    ofstream archivo(nombre);
+
+    for (int i = 0; i < size; i++) {
+        archivo << indices[i] << " " << chars[i] << "\n";
+    }
+
+    archivo.close();
+}
+
+void leerLZ78(const char* nombre, int indices[], char chars[], int &size) {
+    ifstream archivo(nombre);
+
+    size = 0;
+
+    while (archivo >> indices[size] >> chars[size]) {
+        size++;
+    }
+
+    archivo.close();
 }

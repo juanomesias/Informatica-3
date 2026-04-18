@@ -1,6 +1,5 @@
 #include "rotacion.h"
 
-
 unsigned char rotateLeft(unsigned char value, int shift) {
     return (value << shift) | (value >> (8 - shift));
 }

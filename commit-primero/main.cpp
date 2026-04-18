@@ -74,19 +74,26 @@ int main() {
                 cout << "Texto Original: " << texto << endl;
                 break;
             }
-
             case 4: {
                 char key;
+                int n;
+
                 cout << "Ingrese texto: ";
                 cin.getline(texto, 100);
+
+                cout << "Numero de rotaciones: ";
+                cin >> n;
+
                 cout << "Clave: ";
                 cin >> key;
+                cin.ignore();
 
-                xorCipher(texto, key);
+                encrypt(texto, n, key);
                 cout << "Texto Encriptado: " << texto << endl;
 
-                xorCipher(texto, key);
+                decrypt(texto, n, key);
                 cout << "Texto Desencriptado: " << texto << endl;
+
                 break;
             }
             }

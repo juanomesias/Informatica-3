@@ -1,21 +1,35 @@
 #include "xor.h"
 #include "rotacion.h"
 
-// XOR real
-void xorCipher(char* text, char key) {
-    for (int i = 0; text[i] != '\0'; i++) {
-        text[i] = text[i] ^ key;
+void xorC(char* text, char key) {
+    for (int i = 0; text[i] != '\0'; i++)
+        text[i] ^= key;
+}
+
+void encrypt(char* text, int shift, char key) {
+    rotateLeftText(text, shift);
+    xorC(text, key);
+}
+
+void decrypt(char* text, int shift, char key) {
+    xorC(text, key);
+    rotateRightText(text, shift);
+}
+
+void encryptChars(char* chars, int size, int shift, char key) {
+    for (int i = 0; i < size; i++) {
+        unsigned char v = chars[i];
+        v = (v << shift) | (v >> (8 - shift));
+        v ^= key;
+        chars[i] = v;
     }
 }
 
-// 🔐 ENCRIPTAR = rotación + XOR
-void encrypt(char* text, int shift, char key) {
-    rotateLeftText(text, shift);
-    xorCipher(text, key);
-}
-
-// 🔓 DESENCRIPTAR = XOR + rotación inversa
-void decrypt(char* text, int shift, char key) {
-    xorCipher(text, key);
-    rotateRightText(text, shift);
+void decryptChars(char* chars, int size, int shift, char key) {
+    for (int i = 0; i < size; i++) {
+        unsigned char v = chars[i];
+        v ^= key;
+        v = (v >> shift) | (v << (8 - shift));
+        chars[i] = v;
+    }
 }

@@ -1,127 +1,171 @@
 #include <iostream>
+#include <cstring>
 #include "rle.h"
-#include "xor.h"
-#include "rotacion.h"
 #include "lz78.h"
+#include "rotacion.h"
+#include "xor.h"
 #include "archivos.h"
 
 using namespace std;
 
+bool iguales(const char* a, const char* b) {
+    return strcmp(a, b) == 0;
+}
+
 int main() {
-    try {
 
-        int opcion;
-        char texto[100];
+    int opcion;
 
-        do {
-            cout << "MENU PRINCIPAL\n";
-            cout << "1. RLE\n";
-            cout << "2. LZ78\n";
-            cout << "3. Rotacion de bits\n";
-            cout << "4. Encriptacion (Rotacion + XOR)\n";
-            cout << "5. Integracion completa\n";   // 🔥 AQUÍ VA
-            cout << "0. Salir\n";
-            cout << "Opcion: ";
-            cin >> opcion;
-            cin.ignore();
+    do {
+        cout << "\n===== MENU PRINCIPAL =====\n";
+        cout << "1. RLE\n";
+        cout << "2. LZ78\n";
+        cout << "3. Rotacion\n";
+        cout << "4. Encriptacion\n";
+        cout << "5. Integracion completa\n";
+        cout << "0. Salir\n";
+        cout << "Opcion: ";
+        cin >> opcion;
+        cin.ignore();
 
-            switch (opcion) {
+        // ───────────── RLE ─────────────
+        if (opcion == 1) {
+            try {
+                char texto[1000];
+                char comp[1000];
+                char decomp[1000];
 
-            case 1: {
-                char comprimido[100];
-                char descomprimido[100];
+                cout << "Texto: ";
+                cin.getline(texto, 1000);
 
-                cout << "Ingrese texto: ";
-                cin.getline(texto, 100);
+                rleCompress(texto, comp);
+                cout << "Comprimido: " << comp << endl;
 
-                rleCompress(texto, comprimido);
-                cout << "Texto Comprimido: " << comprimido << endl;
+                rleDecompress(comp, decomp);
+                cout << "Descomprimido: " << decomp << endl;
 
-                rleDecompress(comprimido, descomprimido);
-                cout << "Texto Descomprimido: " << descomprimido << endl;
+                if (iguales(texto, decomp))
+                    cout << "✔ OK\n";
+                else
+                    cout << "✘ ERROR\n";
 
-                break;
+            } catch (const char* e) {
+                cout << "Error RLE: " << e << endl;
             }
+        }
 
-            case 2: {
-                cout << "Ingrese texto: ";
-                cin.getline(texto, 100);
-
-                int indices[100];
-                char chars[100];
+        // ───────────── LZ78 ─────────────
+        else if (opcion == 2) {
+            try {
+                char texto[1000];
+                int indices[1000];
+                char chars[1000];
+                char resultado[1000];
                 int size;
+
+                cout << "Texto: ";
+                cin.getline(texto, 1000);
 
                 compressLZ78(texto, indices, chars, size);
 
-                cout << "Texto Comprimido: ";
+                cout << "Pares: ";
                 for (int i = 0; i < size; i++)
-                    cout << indices[i] << chars[i] << " ";
-
-                cout << "\nTexto Descomprimido: ";
-                decompressLZ78(indices, chars, size);
+                    cout << "(" << indices[i] << "," << chars[i] << ") ";
                 cout << endl;
-                break;
+
+                decompressLZ78(indices, chars, size, resultado);
+                cout << "Resultado: " << resultado << endl;
+
+                if (iguales(texto, resultado))
+                    cout << "✔ OK\n";
+                else
+                    cout << "✘ ERROR\n";
+
+            } catch (const char* e) {
+                cout << "Error LZ78: " << e << endl;
             }
+        }
 
-            case 3: {
+        // ───────────── ROTACION ─────────────
+        else if (opcion == 3) {
+            try {
+                char texto[1000];
                 int n;
-                cout << "Ingrese texto: ";
-                cin.getline(texto, 100);
 
-                cout << "Numero de rotaciones: ";
+                cout << "Texto: ";
+                cin.getline(texto, 1000);
+
+                cout << "Rotaciones (1-7): ";
                 cin >> n;
                 cin.ignore();
 
-                rotateLeftText(texto, n);
-                cout << "Texto Rotado: " << texto << endl;
+                char copia[1000];
+                strcpy(copia, texto);
 
-                rotateRightText(texto, n);
-                cout << "Texto Original: " << texto << endl;
+                rotateLeftText(copia, n);
+                cout << "Rotado: " << copia << endl;
 
-                break;
+                rotateRightText(copia, n);
+                cout << "Restaurado: " << copia << endl;
+
+                if (iguales(texto, copia))
+                    cout << "✔ OK\n";
+                else
+                    cout << "✘ ERROR\n";
+
+            } catch (const char* e) {
+                cout << "Error Rotacion: " << e << endl;
             }
+        }
 
-            case 4: {
-                char key;
+        // ───────────── ENCRIPTACION ─────────────
+        else if (opcion == 4) {
+            try {
+                char texto[1000];
                 int n;
+                char key;
 
-                cout << "Ingrese texto: ";
-                cin.getline(texto, 100);
+                cout << "Texto: ";
+                cin.getline(texto, 1000);
 
-                cout << "Numero de rotaciones: ";
+                cout << "Rotaciones: ";
                 cin >> n;
 
                 cout << "Clave: ";
                 cin >> key;
                 cin.ignore();
 
-                encrypt(texto, n, key);
-                cout << "Texto Encriptado: " << texto << endl;
+                char copia[1000];
+                strcpy(copia, texto);
 
-                decrypt(texto, n, key);
-                cout << "Texto Desencriptado: " << texto << endl;
+                encrypt(copia, n, key);
+                cout << "Encriptado: " << copia << endl;
 
-                break;
+                decrypt(copia, n, key);
+                cout << "Desencriptado: " << copia << endl;
+
+                if (iguales(texto, copia))
+                    cout << "✔ OK\n";
+                else
+                    cout << "✘ ERROR\n";
+
+            } catch (const char* e) {
+                cout << "Error Encriptacion: " << e << endl;
             }
+        }
 
-            case 5: {   // 🔥 ESTE ERA EL PROBLEMA PRINCIPAL
+        // ───────────── INTEGRACION ─────────────
+        else if (opcion == 5) {
+            try {
+                char archivo[100];
+                char original[1000];
+                char resultado[1000];
 
-                int metodo;
-                char archivoEntrada[50];
-
-                char texto[1000];
-                char comprimido[1000];
-                char descomprimido[1000];
-
-                int indices[1000];
-                char chars[1000];
-                int size;
-
-                int n;
+                int metodo, n;
                 char key;
 
-                cout << "Archivo de entrada: ";
-                cin.getline(archivoEntrada, 50);
+                cout << "Archivo entrada: ";
+                cin.getline(archivo, 100);
 
                 cout << "Metodo (1=RLE, 2=LZ78): ";
                 cin >> metodo;
@@ -133,52 +177,61 @@ int main() {
                 cin >> key;
                 cin.ignore();
 
-                // 🔹 Leer archivo
-                leerArchivo(archivoEntrada, texto);
+                leerArchivo(archivo, original);
 
+                // ─── RLE ───
                 if (metodo == 1) {
+                    char comp[1000];
 
-                    // RLE
-                    rleCompress(texto, comprimido);
+                    rleCompress(original, comp);
+                    encrypt(comp, n, key);
 
-                    // Encriptar
-                    encrypt(comprimido, n, key);
+                    escribirArchivo("encriptado.txt", comp);
 
-                    escribirArchivo("encriptado.txt", comprimido);
+                    decrypt(comp, n, key);
+                    rleDecompress(comp, resultado);
+                }
 
-                    // Desencriptar
-                    decrypt(comprimido, n, key);
+                // ─── LZ78 ───
+                else if (metodo == 2) {
+                    int indices[1000];
+                    char chars[1000];
+                    int size;
 
-                    // Descomprimir
-                    rleDecompress(comprimido, descomprimido);
+                    compressLZ78(original, indices, chars, size);
 
-                    escribirArchivo("resultado.txt", descomprimido);
-
-                } else {
-
-                    // LZ78
-                    compressLZ78(texto, indices, chars, size);
+                    encryptChars(chars, size, n, key);
 
                     guardarLZ78("encriptado.txt", indices, chars, size);
 
-                    leerLZ78("encriptado.txt", indices, chars, size);
+                    int idx2[1000];
+                    char ch2[1000];
+                    int size2;
 
-                    cout << "Texto reconstruido: ";
-                    decompressLZ78(indices, chars, size);
+                    leerLZ78("encriptado.txt", idx2, ch2, size2);
+
+                    decryptChars(ch2, size2, n, key);
+
+                    decompressLZ78(idx2, ch2, size2, resultado);
                 }
 
-                cout << "Proceso completado\n";
-                break;
+                else {
+                    throw "Metodo invalido";
+                }
+
+                escribirArchivo("resultado.txt", resultado);
+
+                if (iguales(original, resultado))
+                    cout << "✔ TODO CORRECTO\n";
+                else
+                    cout << "✘ ERROR FINAL\n";
+
+            } catch (const char* e) {
+                cout << "Error Integracion: " << e << endl;
             }
+        }
 
-            }
+    } while (opcion != 0);
 
-        } while (opcion != 0);
-
-        return 0;
-
-    } catch (...) {
-        cout << "Ocurrio un error en el programa" << endl;
-        return 1;
-    }
+    return 0;
 }

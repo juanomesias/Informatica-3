@@ -5,6 +5,8 @@
 #include "rotacion.h"
 #include "xor.h"
 #include "archivos.h"
+#include <direct.h>
+
 
 using namespace std;
 
@@ -13,6 +15,11 @@ bool iguales(const char* a, const char* b) {
 }
 
 int main() {
+
+
+    char ruta[1000];
+    _getcwd(ruta, 1000);
+    cout << "Ruta actual: " << ruta << endl;
 
     int opcion;
 
@@ -177,6 +184,7 @@ int main() {
                 cin >> key;
                 cin.ignore();
 
+                // 🔥 USAR ARCHIVO CORRECTAMENTE
                 leerArchivo(archivo, original);
 
                 // ─── RLE ───
@@ -230,7 +238,6 @@ int main() {
                 cout << "Error Integracion: " << e << endl;
             }
         }
-
     } while (opcion != 0);
 
     return 0;
